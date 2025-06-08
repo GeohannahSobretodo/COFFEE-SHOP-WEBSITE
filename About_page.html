@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About Cozy Brew</title>
+<style>
+  
+  :root {
+    --earth-brown: #6b4c3b;
+    --earth-light-brown: #a17f60;
+    --earth-cream: #f2e8dc;
+    --earth-green: #8a9a5b;
+    --earth-dark-green: #5a6a3e;
+    --earth-dark-grey: #4a4a4a;
+  }
+
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--earth-cream);
+    color: var(--earth-dark-grey);
+    line-height: 1.6;
+  }
+
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+  }
+
+
+  header {
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease forwards;
+  }
+
+
+  header h1 {
+    color: var(--earth-brown);
+    font-size: 3rem;
+    letter-spacing: 3px;
+    margin-bottom: 0.2rem;
+  }
+  
+  header p {
+    font-size: 1.2rem;
+    color: var(--earth-green);
+    font-style: italic;
+    margin-top: 0;
+  }
+
+
+  section {
+    margin-bottom: 3rem;
+    background: white;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 3px 8px rgba(107, 76, 59, 0.15);
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+
+  section h2 {
+    color: var(--earth-light-brown);
+    border-bottom: 3px solid var(--earth-green);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+  }
+
+
+  section p {
+    font-size: 1.1rem;
+  }
+
+
+  .image-wrapper {
+    text-align: center;
+    margin-top: 1rem;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+
+  .image-wrapper img {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(107, 76, 59, 0.25);
+    transition: transform 0.5s ease;
+    will-change: transform;
+  }
+
+
+  .image-wrapper img:hover,
+  .image-wrapper img:focus {
+    transform: scale(1.05);
+  }
+
+
+  footer {
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    color: var(--earth-light-brown);
+    border-top: 1px solid var(--earth-light-brown);
+    margin-top: 4rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease 0.5s forwards;
+  }
+
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+  @media (max-width: 600px) {
+    header h1 {
+      font-size: 2.2rem;
+    }
+    section h2 {
+      font-size: 1.6rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Cozy Brew</h1>
+      <p>Your Neighborhood Coffee Haven</p>
+    </header>
+
+
+    <section id="history" class="fade-section">
+      <h2>Our History</h2>
+      <p>Founded in 2022, Cozy Brew started as a small corner café with a vision to bring warmth, comfort, and excellent coffee to the local community. What began as a modest endeavor quickly grew into a beloved gathering spot where friendships bloom over cup after cup of freshly brewed happiness.</p>
+      <div class="image-wrapper">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80" alt="Cozy interior cafe atmosphere" />
+      </div>
+    </section>
+
+
+    <section id="mission" class="fade-section">
+      <h2>Our Mission</h2>
+      <p>At Cozy Brew, our mission is to create a welcoming environment where every visitor feels at home. We strive to serve exceptional coffee crafted from carefully selected beans, prepared with passion, and paired with friendly service that makes each visit memorable.</p>
+      <div class="image-wrapper">
+        <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80" alt="Barista preparing coffee with love" />
+      </div>
+    </section>
+
+
+    <section id="values" class="fade-section">
+      <h2>Our Values</h2>
+      <p>Community, quality, and sustainability form the core of Cozy Brew's values. We believe in fostering relationships, supporting local suppliers, and making environmentally conscious choices to ensure the well-being of both our customers and the planet.</p>
+      <div class="image-wrapper">
+        <img src="https://www.shutterstock.com/image-photo/worker-control-quality-roasting-coffee-600nw-2490303589.jpg" alt="Coffee beans and eco-friendly practices" />
+      </div>
+    </section>
+
+
+    <section id="quality" class="fade-section">
+      <h2>Commitment to Quality</h2>
+      <p>We meticulously source premium beans from ethical growers and employ expert baristas dedicated to perfecting every pour. Our commitment to quality extends beyond coffee to encompass the entire experience from our cozy ambiance to the carefully curated menu offerings.</p>
+      <div class="image-wrapper">
+        <img src="https://www.ictcoffee.com/wp-content/uploads/2023/06/coffee-flavors.jpeg" alt="Beautifully crafted latte art" />
+      </div>
+    </section>
+
+
+    <footer>
+      &copy; 2022 Cozy Brew. All rights reserved.
+    </footer>
+  </div>
+
+
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      const fadeSections = document.querySelectorAll('.fade-section');
+
+
+      function checkVisibility() {
+        const windowBottom = window.innerHeight + window.scrollY;
+
+
+        fadeSections.forEach(section => {
+          const sectionTop = section.offsetTop + section.offsetHeight * 0.2;
+
+
+          if (windowBottom > sectionTop) {
+            section.classList.add('visible');
+          }
+        });
+      }
+
+
+      window.addEventListener('scroll', checkVisibility);
+      checkVisibility();
+    });
+  </script>
+</body>
+</html>
