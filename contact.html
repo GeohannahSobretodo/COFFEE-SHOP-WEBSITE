@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cozy Brew - Contact Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    body {
+      background-color: #f5f3ee;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .header {
+      background-color: #8d6e63;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .header h2 {
+      font-size: 2em;
+    }
+
+    .header p {
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
+
+    .about-cafe {
+        max-width: 800px;
+        margin: 30px auto;
+        text-align: center;
+        font-size: 1.1em;
+        color: #5d4037;
+    }
+
+    .contact-box {
+      background-color: #fff7f0;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .contact-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .contact-column {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .contact-column h3 {
+      margin-bottom: 8px;
+      color: #5d4037;
+      font-size: 1.1em;
+    }
+
+    .contact-column p {
+      margin-bottom: 18px;
+      color: #555;
+    }
+
+    .logo-container {
+      text-align: center;
+    }
+
+    .logo-container img {
+      width: 130px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .form-section {
+      text-align: center;
+    }
+
+    .form-section h2 {
+      color: #6d4c41;
+      margin-bottom: 25px;
+      font-size: 1.6em;
+    }
+
+    form {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: #fffefc;
+      transition: 0.3s border;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #a1887f;
+      outline: none;
+      box-shadow: 0 0 5px rgba(161, 136, 127, 0.3);
+    }
+
+    button {
+      padding: 12px 30px;
+      background-color: #a1887f;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #795548;
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background-color: #5d4037;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      margin-top: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .contact-grid {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .header h1 {
+        font-size: 2.2em;
+      }
+
+      .form-section h2 {
+        font-size: 1.4em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>Contact Us</h2>
+    <p>Your daily dose of warmth & coffee</p>
+  </div>
+
+  <!-- New About Paragraph -->
+  <div class="about-cafe">
+    <p>
+      We make the delicious coffee for the coffee lovers. We are a team of dedicated coffee fans who celebrate exceptional coffee brands and roasters by providing our guests the unique opportunity to try coffee drinks.
+    </p>
+  </div>
+
+  <div class="contact-box">
+    <div class="contact-grid">
+      <!-- Column 1 -->
+      <div class="contact-column">
+        <h3>📍 Address</h3>
+        <p>#207 Blk 10 Lot 27 Barrieto St. Ph9 Imus City, Cavite</p>
+        <h3>📧 Email</h3>
+        <p>cozybrew@gmail.com</p>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="contact-column">
+        <h3>📞 Phone</h3>
+        <p>0915 528 0312</p>
+        <h3>🕒 Operating Hours</h3>
+        <p>Monday - Friday: 9AM to 6PM</p>
+        <p>Saturday: 10AM - 4PM</p>
+      </div>
+
+      <!-- Column 3 (Logo) -->
+      <div class="contact-column logo-container">
+        <img src="logo.png" alt="Cozy Brew Logo">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Send us a message</h2>
+      <form>
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email Address" required />
+        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Cozy Brew. All rights reserved. | Drink with love! </p>
+  </footer>
+
+</body>
+</html>
