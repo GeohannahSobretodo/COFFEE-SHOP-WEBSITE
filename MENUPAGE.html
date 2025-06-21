@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menupage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/louis-george-café');
+        :root {
+            --earth-brown: #6b4c3b;
+            --earth-light-brown: #a17f60;
+            --earth-cream: #f2e8dc;
+            --earth-green: #8a9a5b;
+            --earth-dark-green: #5a6a3e;
+            --earth-dark-grey: #4a4a4a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('bg2.jpg') center center/cover no-repeat;
+            background-attachment: fixed;
+            background-color: #f2e8dc;
+            color: #000000;
+        }
+        @media (min-width: 768px) {
+            .food-dessert-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .hot-cold-drinks-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .menu-table th, .menu-table td {
+            padding: 0.75rem 0.5rem;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 5px solid #e5e7eb;
+        }
+        .menu-table th {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        .menu-table td:last-child {
+            text-align: right;
+            white-space: nowrap;
+            font-weight: 600;
+            color: #ef4444;
+        }
+        .menu-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .photo.hot-cold-drinks-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .modal-item-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+        }
+
+        .cart-summary {
+            background-color: #f9f9f9;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        #checkout-form-container, #receipt-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #checkout-form, #receipt {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #receipt table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        #receipt th, #receipt td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: left;
+        }
+        #receipt tfoot td {
+            font-weight: bold;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receipt-container, #receipt-container * {
+                visibility: visible;
+            }
+            #receipt-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: auto;
+                height: auto;
+                background-color: transparent;
+                display: block !important;
+            }
+            #receipt {
+                max-width: none;
+                width: auto;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+
+        .receipt-logo {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 1rem;
+        }
+
+        /* New styles for the "Back to Home Page" button at the bottom */
+        .return-home-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            opacity: 0; /* Initially hidden for animation */
+            transform: translateY(20px); /* Start slightly below final position */
+            animation: fadeInUp 1s ease 0.8s forwards; /* Animation to fade in and move up */
+        }
+        .return-home-bottom a {
+            display: inline-block;
+            background: var(--earth-light-brown);
+            color: var(--earth-cream) !important; /* Override Tailwind */
+            text-decoration: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: 'Louis George Café', sans-serif; /* Apply specific font */
+        }
+        .return-home-bottom a:hover {
+            background: var(--earth-brown);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-8 max-w-screen-xl bg-white shadow-lg rounded-lg my-8" id="main-content">
+
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-4 border-b border-gray-200">
+            <div class="text-left mb-4 md:mb-0">
+                <div class="text-3xl font-bold text-gray-800">COZY BREW</div>
+                <p class="text-sm text-gray-600 mt-1">Your neighborhood cafe haven</p>
+            </div>
+            <div class="text-sm text-gray-700 md:text-right">
+                <p>Mon-Fri 9AM-10PM</p>
+                <p>Sat-Sun 11AM-11PM</p>
+                <p class="mt-2">CWHW+9VJ Cavite Civic Center,</p>
+                <p>Cavite City, 4103 Cavite</p>
+                <p>123-456-7890</p>
+            </div>
+        </header>
+
+        <section class="mb-10">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center">HOT</h2>
+            <div class="hot-cold-drinks-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Espresso"
+                     data-price-tall="135.00"
+                     data-price-grande="145.00"
+                     data-price-venti="150.00"
+                     data-description="A concentrated, rich, and aromatic shot, pulled to perfection. Enjoy it pure or as the foundation for your favorite milk-based drinks."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Espresso.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Espresso.jpg" alt="Espresso" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">ESPRESSO</h3>
+                    <span class="text-red-500">Tall - ₱135.00</span>
+                    <span class="text-red-500">Grande - ₱145.00</span>
+                    <span class="text-red-500">Venti - ₱150.00</span>
+                    <p class="text-sm text-gray-600">A concentrated, rich, and aromatic shot, pulled to perfection. Enjoy it pure or as the foundation for your favorite milk-based drinks.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Double Espresso"
+                     data-price-tall="155.00"
+                     data-price-grande="175.00"
+                     data-price-venti="190.00"
+                     data-description="Bold and intense, perfect for a powerful coffee kick."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Double Espresso.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Double Espresso.jpg" alt="Double Espresso" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">DOUBLE ESPRESSO</h3>
+                    <span class="text-red-500">Tall - ₱155.00</span>
+                    <span class="text-red-500">Grande - ₱175.00</span>
+                    <span class="text-red-500">Venti - ₱190.00</span>
+                    <p class="text-sm text-gray-600"> Bold and intense, perfect for a powerful coffee kick.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Cafe Americano"
+                     data-price-tall="160.00"
+                     data-price-grande="185.00"
+                     data-price-venti="200.00"
+                     data-description="Enjoy the pure essence of espresso, softened with hot water to create a beautifully balanced and aromatic brew."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cafe Americano.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cafe Americano.jpg" alt="Cafe Americano" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">CAFE AMERICANO</h3>
+                    <span class="text-red-500">Tall - ₱160.00</span>
+                    <span class="text-red-500">Grande - ₱185.00</span>
+                    <span class="text-red-500">Venti - ₱200.00</span>
+                    <p class="text-sm text-gray-600">Enjoy the pure essence of espresso, softened with hot water to create a beautifully balanced and aromatic brew.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Flat White"
+                     data-price-tall="175.00"
+                     data-price-grande="200.00"
+                     data-price-venti="215.00"
+                     data-description="Espresso and steamed milk, served with a very thin layer of foam for a smooth and intense coffee flavor."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Flat white.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Flat white.jpg" alt="Flat White" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">FLAT WHITE</h3>
+                    <span class="text-red-500">Tall - ₱175.00</span>
+                    <span class="text-red-500">Grande - ₱200.00</span>
+                    <span class="text-red-500">Venti - ₱215.00</span>
+                    <p class="text-sm text-gray-600">Espresso and steamed milk, served with a very thin layer of foam for a smooth and intense coffee flavor.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Cafe Latte"
+                     data-price-tall="170.00"
+                     data-price-grande="195.00"
+                     data-price-venti="210.00"
+                     data-description="Smooth espresso, steamed milk, and a delicate layer of foam. Your everyday comforting classic."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cafe_Latte.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cafe_Latte.jpg" alt="Cafe Latte" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">CAFE LATTE</h3>
+                    <span class="text-red-500">Tall - ₱170.00</span>
+                    <span class="text-red-500">Grande - ₱195.00</span>
+                    <span class="text-red-500">Venti - ₱210.00</span>
+                    <p class="text-sm text-gray-600">Smooth espresso, steamed milk, and a delicate layer of foam. Your everyday comforting classic.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Caramel Macchiato"
+                     data-price-tall="195.00"
+                     data-price-grande="220.00"
+                     data-price-venti="235.00"
+                     data-description="Our signature espresso and vanilla, layered with creamy steamed milk and a generous caramel swirl."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Macchiato.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Macchiato.jpg" alt="Caramel Macchiato" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">CARAMEL MACCHIATO</h3>
+                    <span class="text-red-500">Tall - ₱195.00</span>
+                    <span class="text-red-500">Grande - ₱220.00</span>
+                    <span class="text-red-500">Venti - ₱235.00</span>
+                    <p class="text-sm text-gray-600"> Our signature espresso and vanilla, layered with creamy steamed milk and a generous caramel swirl.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Cappuccino"
+                     data-price-tall="165.00"
+                     data-price-grande="190.00"
+                     data-price-venti="205.00"
+                     data-description="A timeless classic. Our cappuccino features rich espresso, steamed milk, and a generous cap of frothy foam, perfect for a balanced and comforting coffee experience."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cappuccino.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cappuccino.jpg" alt="Cappuccino" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">CAPPUCCINO</h3>
+                    <span class="text-red-500">Tall - ₱165.00</span>
+                    <span class="text-red-500">Grande - ₱190.00</span>
+                    <span class="text-red-500">Venti - ₱205.00</span>
+                    <p class="text-sm text-gray-600">A timeless classic. Our cappuccino features rich espresso, steamed milk, and a generous cap of frothy foam, perfect for a balanced and comforting coffee experience.i</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Frappuccino"
+                     data-price-tall="155.00"
+                     data-price-grande="170.00"
+                     data-price-venti="185.00"
+                     data-description="Your favorite blended treat, reimagined hot. Velvety smooth and deliciously comforting."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\frap.png">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\frap.png" alt="Frappuccino" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">FRAPPUCCINO</h3>
+                    <span class="text-red-500">Tall - ₱155.00</span>
+                    <span class="text-red-500">Grande - ₱170.00</span>
+                    <span class="text-red-500">Venti - ₱185.00</span>
+                    <p class="text-sm text-gray-600">Your favorite blended treat, reimagined hot. Velvety smooth and deliciously comforting.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center">COLD</h2>
+            <div class="hot-cold-drinks-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Mango Dragon Fruit with Lemonade"
+                     data-price-tall="185.00"
+                     data-price-grande="210.00"
+                     data-price-venti="225.00"
+                     data-description="Sweet & Tangy Escape: Tropical mango and vibrant dragon fruit swirled with zesty lemonade."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Mango Dragon Fruit with Lemonade.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Mango Dragon Fruit with Lemonade.jpg" alt="mango fruit" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">MANGO DRAGON FRUIT WITH LEMONADE</h3>
+                        <span class="text-red-500">Tall - ₱185.00</span>
+                    <span class="text-red-500">Grande - ₱210.00</span>
+                    <span class="text-red-500">Venti - 225.00</span>
+                    <p class="text-sm text-gray-600">Sweet & Tangy Escape: Tropical mango and vibrant dragon fruit swirled with zesty lemonade.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Pink Drink with Strawberry Acai"
+                     data-price-tall="190.00"
+                     data-price-grande="205.00"
+                     data-price-venti="230.00"
+                     data-description="Sweet, refreshing, and vibrant. Our Pink Drink with Strawberry Açaí is a delightful blend that's perfect for a sunny day."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Pink Drink with Strawberry Acai.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Pink Drink with Strawberry Acai.jpg" alt="Pink Drink with Strawberry Acai" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">PINK DRINK WITH STRAWBERRY ACAI</h3>
+                    <span class="text-red-500">Tall - ₱190.00</span>
+                    <span class="text-red-500">Grande - ₱205.00</span>
+                    <span class="text-red-500">Venti - 230.00</span>
+                    <p class="text-sm text-gray-600">Sweet, refreshing, and vibrant. Our Pink Drink with Strawberry Açaí is a delightful blend that's perfect for a sunny day.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Pure Matcha Latte"
+                     data-price-tall="180.00"
+                     data-price-grande="205.00"
+                     data-price-venti="220.00"
+                     data-description="Savor the rich, verdant essence of pure matcha, expertly blended into a creamy, comforting latte."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Pure Matcha Latte.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Pure Matcha Latte.jpg" alt="Pure Matcha Latte" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">PURE MATCHA LATTE</h3>
+                    <span class="text-red-500">Tall - ₱180.00</span>
+                    <span class="text-red-500">Grande - ₱205.00</span>
+                    <span class="text-red-500">Venti - 220.00</span>
+                    <p class="text-sm text-gray-600">Savor the rich, verdant essence of pure matcha, expertly blended into a creamy, comforting latte.</p>
+                </div>
+                <div class="flex flex-col items-center text-center menu-item"
+                     data-name="Chai Tea Latte"
+                     data-price-tall="170.00"
+                     data-price-grande="195.00"
+                     data-price-venti="220.00"
+                     data-description="A fragrant blend of black tea and aromatic spices, steamed with milk for a perfectly cozy sip."
+                     data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Chai Tea Latte.jpg">
+                    <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Chai Tea Latte.jpg" alt="Chai Tea Latte" class="w-32 h-32 rounded-full object-cover mb-2">
+                    <h3 class="text-lg font-semibold text-gray-900">CHAI TEA LATTE</h3>
+                    <span class="text-red-500">Tall - ₱170.00</span>
+                    <span class="text-red-500">Grande - ₱195.00</span>
+                    <span class="text-red-500">Venti - 220.00</span>
+                    <p class="text-sm text-gray-600">A fragrant blend of black tea and aromatic spices, steamed with milk for a perfectly cozy sip.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center">FOOD</h2>
+                <table class="menu-table">
+                    <thead>
+                        <tr>
+                            <th class="w-3/4">Item</th>
+                            <th class="w-1/4">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="menu-item-table"
+                            data-name="Mushroom Melt Sandwich"
+                            data-price="215.00"
+                            data-description="A warm, gooey blend of earthy mushrooms and rich, melted cheese, pressed until golden on your favorite bread."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Melted tuna sandwich.png">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Melted tuna sandwich.png" alt="mushroom sandwich" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">MUSHROOM MELT SANDWICH</h3>
+                                <p class="text-sm text-gray-600">A warm, gooey blend of earthy mushrooms and rich, melted cheese, pressed until golden on your favorite bread.</p>
+                            </td>
+                            <td>₱215.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Cheesy Sandwich"
+                            data-price="215.00"
+                            data-description="Our classic blend of cheeses, perfectly grilled on your choice of bread. Simple, satisfying, and utterly delicious."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cheesy sandwich.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Cheesy sandwich.jpg" alt="tuna sandwich" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">CHEESY SANDWICH</h3>
+                                <p class="text-sm text-gray-600"> Our classic blend of cheeses, perfectly grilled on your choice of bread. Simple, satisfying, and utterly delicious.</p>
+                            </td>
+                            <td>₱215.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Roasted Egg, Ham & Cheese Croissant"
+                            data-price="190.00"
+                            data-description="Our buttery croissant baked with roasted egg, delicious ham, and melted cheese."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Roated egg, Ham & Cheese Croissant bun.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Roated egg, Ham & Cheese Croissant bun.jpg" alt="croissant" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">ROASTED EGG, HAM & CHEESE CROISSANT</h3>
+                                <p class="text-sm text-gray-600">Our buttery croissant baked with roasted egg, delicious ham, and melted cheese.</p>
+                            </td>
+                            <td>₱190.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="French Toast with Maple Syrup"
+                            data-price="140.00"
+                            data-description="Fluffy slices of French toast are lightly crisped, ready for a sweet cascade of rich maple syrup. This classic combination offers a simple yet profoundly satisfying taste. It's a delicious and comforting treat."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\FRENCH TOAST WITH MAPLE SYRUP.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\FRENCH TOAST WITH MAPLE SYRUP.jpg" alt="toasted bread" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">FRENCH TOAST WITH MAPLE SYRUP</h3>
+                                <p class="text-sm text-gray-600">Fluffy slices of French toast are lightly crisped, ready for a sweet cascade of rich maple syrup. This classic combination offers a simple yet profoundly satisfying taste. It's a delicious and comforting treat.</p>
+                            </td>
+                            <td>₱140.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Ube Cheese Ensaymada"
+                            data-price="130.00"
+                            data-description="Experience a Filipino favorite! Our Ube Cheese Ensaymada features a fluffy ube-infused bread, buttery goodness, and a delightful savory cheese topping."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Ube cheese Ensaymada.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\Ube cheese Ensaymada.jpg" alt="ube cheese ensaymada" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">UBE CHEESE ENSAYMADA</h3>
+                                <p class="text-sm text-gray-600">Experience a Filipino favorite! Our Ube Cheese Ensaymada features a fluffy ube-infused bread, buttery goodness, and a delightful savory cheese topping.</p>
+                            </td>
+                            <td>₱130.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Chicken Sandwich"
+                            data-price="145.00"
+                            data-description="A delicious blend of savory chicken, fresh veggies, and a special sauce, served on toasted bread."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\sandwich chicken.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\sandwich chicken.jpg" alt="chicken sanndwich" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">CHICKEN SANDWICH</h3>
+                                <p class="text-sm text-gray-600">A delicious blend of savory chicken, fresh veggies, and a special sauce, served on toasted bread.</p>
+                            </td>
+                            <td>₱145.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-6 text-center">DESSERT</h2>
+                <table class="menu-table">
+                    <thead>
+                        <tr>
+                            <th class="w-4/5">Item</th>
+                            <th class="w-2/5">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="menu-item-table"
+                            data-name="Chocolate Waffle"
+                            data-price="85.00"
+                            data-description="Double Chocolate Waffle: For the true chocolate lover! A warm waffle bursting with chocolate flavor, a delightful indulgence."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\chocolate waffle.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\chocolate waffle.jpg" alt="cwaffles" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">CHOCOLATE WAFFLE</h3>
+                                <p class="text-sm text-gray-600">Double Chocolate Waffle: For the true chocolate lover! A warm waffle bursting with chocolate flavor, a delightful indulgence.</p>
+                            </td>
+                            <td>₱85.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Strawberry Waffle"
+                            data-price="90.00"
+                            data-description="Cozy Strawberry Waffle: Our freshly made waffle, perfectly golden, and piled high with vibrant, sweet strawberries."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\strawberry waffles.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\strawberry waffles.jpg" alt="swaffles" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">STRAWBERRY WAFFLE</h3>
+                                <p class="text-sm text-gray-600">Cozy Strawberry Waffle: Our freshly made waffle, perfectly golden, and piled high with vibrant, sweet strawberries.</p>
+                            </td>
+                            <td>₱90.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Cozy Tiramisu Cake"
+                            data-price="125.00"
+                            data-description="The perfect companion to your coffee! Enjoy a comforting slice of tiramisu with its classic layers of espresso, mascarpone, and cocoa."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\tiramissu.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\tiramissu.jpg" alt="sliced tiramisu" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">COZY TIRAMISU CAKE</h3>
+                                <p class="text-sm text-gray-600">The perfect companion to your coffee! Enjoy a comforting slice of tiramisu with its classic layers of espresso, mascarpone, and cocoa.</p>
+                            </td>
+                            <td>₱125.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Cookie Crumble Ice Cream"
+                            data-price="75.00"
+                            data-description="Indulge in a scoop of pure delight! Choose from our classic Vanilla, rich Chocolate, fruity Strawberry, unique Green Tea, or aromatic Coffee ice cream. And don't forget to try our customer-favorite Cookies & Cream!"
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\ice cream.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\ice cream.jpg" alt="ice cream" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">COOKIE CRUMBLE ICE CREAM</h3>
+                                <p class="text-sm text-gray-600">Indulge in a scoop of pure delight! Choose from our classic Vanilla, rich Chocolate, fruity Strawberry, unique Green Tea, or aromatic Coffee ice cream. And don't forget to try our customer-favorite Cookies & Cream!</p>
+                            </td>
+                            <td>₱75.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Chocolate Pudding"
+                            data-price="70.00"
+                            data-description="Indulge in a velvety smooth, intensely chocolatey classic that promises pure delight with every bite. This rich, comforting treat is perfect for satisfying your sweet cravings."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\chocolate pudding.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\chocolate pudding.jpg" alt="cpudding" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">CHOCOLATE PUDDING</h3>
+                                <p class="text-sm text-gray-600"> Indulge in a velvety smooth, intensely chocolatey classic that promises pure delight with every bite. This rich, comforting treat is perfect for satisfying your sweet cravings.</p>
+                            </td>
+                            <td>₱70.00</td>
+                        </tr>
+                        <tr class="menu-item-table"
+                            data-name="Strawberry Pudding"
+                            data-price="70.00"
+                            data-description="Our silky-smooth pudding, made with real strawberries for a naturally sweet and refreshing dessert."
+                            data-image="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\strawberry pudding.jpg">
+                            <td>
+                                <img src="C:\Users\geoss\Documents\GitHub\SOBRETODO-WEBSITE\.vscode\MENU PAGE\strawberry pudding.jpg" alt="spudding" class="w-32 h-32 rounded-full object-cover mb-2">
+                                <h3 class="text-lg font-semibold text-gray-900">STRAWBERRY PUDDING</h3>
+                                <p class="text-sm text-gray-600">Our silky-smooth pudding, made with real strawberries for a naturally sweet and refreshing dessert.</p>
+                            </td>
+                            <td>₱70.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="cart-summary mb-10">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Your Cart</h2>
+            <div id="cart-items" class="mb-4">
+                <p id="empty-cart-message" class="text-gray-600 text-center">Your cart is empty.</p>
+            </div>
+            <div class="flex justify-between items-center font-bold text-lg border-t pt-4">
+                <span>Subtotal:</span>
+                <span id="cart-subtotal">₱0.00</span>
+            </div>
+            <div id="discount-row" class="flex justify-between items-center text-red-500 text-lg" style="display: none;">
+                <span>Senior Citizen Discount (20%):</span>
+                <span id="senior-discount-amount">-₱0.00</span>
+            </div>
+            <div class="flex justify-between items-center font-bold text-2xl border-t mt-2 pt-4">
+                <span>Grand Total:</span>
+                <span id="cart-grand-total">₱0.00</span>
+            </div>
+            <button id="checkout-button" class="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 font-semibold" style="display: none;">Proceed to Checkout</button>
+        </section>
+
+        <div class="return-home-bottom">
+            <a href="home_page.html">Back to Home Page</a>
+        </div>
+    </div>
+
+    <div id="item-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close-button">&times;</span>
+            <img id="modal-item-image" src="" alt="Item Image" class="modal-item-image">
+            <h3 id="modal-item-name" class="text-2xl font-bold text-gray-900 mb-2 text-center"></h3>
+            <p id="modal-item-description" class="text-sm text-gray-700 mb-4 text-center"></p>
+
+            <div id="modal-price-options" class="mb-4 text-center">
+                </div>
+
+            <div class="flex justify-center items-center mb-6">
+                <label for="item-quantity" class="mr-2">Quantity:</label>
+                <input type="number" id="item-quantity" value="1" min="1" class="w-16 p-2 border rounded-md text-center">
+            </div>
+
+            <button id="add-to-cart-button" class="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 font-semibold">Add to Cart</button>
+        </div>
+    </div>
+
+    <div id="checkout-form-container" class="modal-overlay">
+        <div id="checkout-form" class="modal-content">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Customer Details & Payment</h2>
+            <form id="customer-checkout-form">
+                <div class="mb-4">
+                    <label for="customer-name" class="block text-gray-700 text-sm font-bold mb-2">Customer Name:</label>
+                    <input type="text" id="customer-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                        <input type="checkbox" id="senior-citizen-checkbox" class="mr-2 leading-tight">
+                        <span class="text-sm">Senior Citizen (20% discount)</span>
+                    </label>
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Payment Method:</h3>
+                <div class="mb-6">
+                    <label class="inline-flex items-center mr-4">
+                        <input type="radio" name="payment-method" value="GCash" class="form-radio text-green-600" checked>
+                        <span class="ml-2 text-gray-700">GCash</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="payment-method" value="Paymaya" class="form-radio text-blue-600">
+                        <span class="ml-2 text-gray-700">Paymaya</span>
+                    </label>
+                </div>
+
+                <div id="phone-number-input-group" class="mb-4" style="display: none;">
+                    <label for="payment-phone-number" class="block text-gray-700 text-sm font-bold mb-2">Phone Number:</label>
+                    <input type="tel" id="payment-phone-number" placeholder="e.g., 09171234567" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div class="flex justify-between">
+                    <button type="button" id="back-to-cart-button" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 font-semibold">Back to Cart</button>
+                    <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 font-semibold">Place Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="receipt-container" class="modal-overlay">
+        <div id="receipt" class="modal-content">
+            <img src="homepagelogo.png" alt="Cozy Brew Cafe Logo" class="receipt-logo" id="cafe-logo-receipt">
+
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">COZY BREW</h2>
+            <p class="text-center text-sm text-gray-600 mb-6">Official Receipt</p>
+
+            <div class="mb-4">
+                <p><strong>Transaction ID:</strong> <span id="receipt-transaction-id"></span></p>
+                <p><strong>Date:</strong> <span id="receipt-date"></span></p>
+                <p><strong>Customer Name:</strong> <span id="receipt-customer-name"></span></p>
+            </div>
+
+            <table class="mb-4">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="receipt-items">
+                    </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-right">Subtotal:</td>
+                        <td id="receipt-subtotal"></td>
+                    </tr>
+                    <tr id="receipt-discount-row" style="display: none;">
+                        <td colspan="3" class="text-right text-red-500">Senior Citizen Discount (20%):</td>
+                        <td id="receipt-senior-discount" class="text-red-500"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right">Payment Method:</td>
+                        <td id="receipt-payment-method"></td>
+                    </tr>
+                    <tr id="receipt-phone-number-row" style="display: none;">
+                        <td colspan="3" class="text-right">Payment Phone:</td>
+                        <td id="receipt-payment-phone"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right text-2xl font-bold">Total Paid:</td>
+                        <td id="receipt-grand-total" class="text-2xl font-bold"></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <p class="text-center text-sm text-gray-700 mt-6">Thank you for your order at Cozy Brew!</p>
+            <p class="text-center text-xs text-gray-500">Visit us again soon!</p>
+
+            <div class="flex justify-center mt-6 no-print">
+                <button id="print-receipt-button" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 font-semibold mr-4">Print Receipt</button>
+                <button id="new-order-button" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 font-semibold">New Order</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Follow our social media @cozybrew in facebook, instagram, and twitter for special promo.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const itemModal = document.getElementById('item-modal');
+            const modalCloseButton = document.querySelector('.modal-close-button');
+            const modalItemImage = document.getElementById('modal-item-image');
+            const modalItemName = document.getElementById('modal-item-name');
+            const modalItemDescription = document.getElementById('modal-item-description');
+            const modalPriceOptions = document.getElementById('modal-price-options');
+            const itemQuantityInput = document.getElementById('item-quantity');
+            const addToCartButton = document.getElementById('add-to-cart-button');
+
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartSubtotalSpan = document.getElementById('cart-subtotal');
+            const seniorDiscountRow = document.getElementById('discount-row');
+            const seniorDiscountAmountSpan = document.getElementById('senior-discount-amount');
+            const cartGrandTotalSpan = document.getElementById('cart-grand-total');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const checkoutButton = document.getElementById('checkout-button');
+
+            const checkoutFormContainer = document.getElementById('checkout-form-container');
+            const customerCheckoutForm = document.getElementById('customer-checkout-form');
+            const customerNameInput = document.getElementById('customer-name');
+            const seniorCitizenCheckbox = document.getElementById('senior-citizen-checkbox');
+            const backToCartButton = document.getElementById('back-to-cart-button');
+
+            const paymentMethodRadios = document.querySelectorAll('input[name="payment-method"]');
+            const phoneNumberInputGroup = document.getElementById('phone-number-input-group');
+            const paymentPhoneNumberInput = document.getElementById('payment-phone-number');
+
+            const receiptContainer = document.getElementById('receipt-container');
+            const receiptTransactionId = document.getElementById('receipt-transaction-id');
+            const receiptDate = document.getElementById('receipt-date');
+            const receiptCustomerName = document.getElementById('receipt-customer-name');
+            const receiptItems = document.getElementById('receipt-items');
+            const receiptSubtotal = document.getElementById('receipt-subtotal');
+            const receiptDiscountRow = document.getElementById('receipt-discount-row');
+            const receiptSeniorDiscount = document.getElementById('receipt-senior-discount');
+            const receiptPaymentMethod = document.getElementById('receipt-payment-method');
+            const receiptPhoneNumberRow = document.getElementById('receipt-phone-number-row');
+            const receiptPaymentPhone = document.getElementById('receipt-payment-phone');
+            const receiptGrandTotal = document.getElementById('receipt-grand-total');
+            const printReceiptButton = document.getElementById('print-receipt-button');
+            const newOrderButton = document.getElementById('new-order-button');
+            const mainContent = document.getElementById('main-content');
+
+            const cafeLogoReceipt = document.getElementById('cafe-logo-receipt');
+
+
+            let cart = [];
+            let currentItem = {};
+            let isSeniorCitizen = false;
+            const SENIOR_DISCOUNT_RATE = 0.20;
+
+            function generateTransactionId() {
+                const now = new Date();
+                const year = now.getFullYear().toString().slice(-2);
+                const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                const day = now.getDate().toString().padStart(2, '0');
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                const random = Math.floor(Math.random() * 900) + 100;
+                return `TRX-${year}${month}${day}-${hours}${minutes}${seconds}-${random}`;
+            }
+
+            function openModal(itemData) {
+                currentItem = itemData;
+                modalItemImage.src = itemData.image;
+                modalItemName.textContent = itemData.name;
+                modalItemDescription.textContent = itemData.description;
+                itemQuantityInput.value = 1;
+
+                modalPriceOptions.innerHTML = '';
+
+                if (itemData.priceTall) {
+                    modalPriceOptions.innerHTML = `
+                        <label class="block mb-2">Select Size:</label>
+                        <select id="item-size" class="p-2 border rounded-md">
+                            <option value="Tall" data-price="${itemData.priceTall}">Tall - ₱${parseFloat(itemData.priceTall).toFixed(2)}</option>
+                            <option value="Grande" data-price="${itemData.priceGrande}">Grande - ₱${parseFloat(itemData.priceGrande).toFixed(2)}</option>
+                            <option value="Venti" data-price="${itemData.priceVenti}">Venti - ₱${parseFloat(itemData.priceVenti).toFixed(2)}</option>
+                        </select>
+                        <p class="text-xl font-bold text-red-600 mt-2">Price: <span id="modal-current-price">₱${parseFloat(itemData.priceTall).toFixed(2)}</span></p>
+                    `;
+                    document.getElementById('item-size').addEventListener('change', (event) => {
+                        const selectedOption = event.target.options[event.target.selectedIndex];
+                        const price = selectedOption.dataset.price;
+                        document.getElementById('modal-current-price').textContent = `₱${parseFloat(price).toFixed(2)}`;
+                    });
+                } else {
+                    modalPriceOptions.innerHTML = `
+                        <p class="text-xl font-bold text-red-600">Price: ₱<span id="modal-current-price">${parseFloat(itemData.price).toFixed(2)}</span></p>
+                    `;
+                }
+
+                itemModal.style.display = 'flex';
+            }
+
+            function closeModal() {
+                itemModal.style.display = 'none';
+            }
+
+            document.querySelectorAll('.hot-cold-drinks-container .menu-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const itemData = {
+                        name: item.dataset.name,
+                        priceTall: item.dataset.priceTall,
+                        priceGrande: item.dataset.priceGrande,
+                        priceVenti: item.dataset.priceVenti,
+                        description: item.dataset.description,
+                        image: item.dataset.image
+                    };
+                    openModal(itemData);
+                });
+            });
+
+            document.querySelectorAll('.menu-table .menu-item-table').forEach(row => {
+                row.addEventListener('click', () => {
+                    const itemData = {
+                        name: row.dataset.name,
+                        price: row.dataset.price,
+                        description: row.dataset.description,
+                        image: row.dataset.image
+                    };
+                    openModal(itemData);
+                });
+            });
+
+            modalCloseButton.addEventListener('click', closeModal);
+            itemModal.addEventListener('click', (event) => {
+                if (event.target === itemModal) {
+                    closeModal();
+                }
+            });
+
+            function updateCartDisplay() {
+                cartItemsContainer.innerHTML = '';
+                let subtotal = 0;
+
+                if (cart.length === 0) {
+                    emptyCartMessage.style.display = 'block';
+                    checkoutButton.style.display = 'none';
+                } else {
+                    emptyCartMessage.style.display = 'none';
+                    checkoutButton.style.display = 'block';
+                    cart.forEach((item, index) => {
+                        const itemElement = document.createElement('div');
+                        itemElement.classList.add('cart-item');
+                        const itemPrice = parseFloat(item.price);
+                        const itemSubtotal = itemPrice * item.quantity;
+                        subtotal += itemSubtotal;
+
+                        itemElement.innerHTML = `
+                            <span>${item.name} ${item.size ? `(${item.size})` : ''} x ${item.quantity}</span>
+                            <span>₱${itemSubtotal.toFixed(2)}</span>
+                            <button class="remove-from-cart-button text-red-500 hover:text-red-700 text-sm ml-2" data-index="${index}">&times;</button>
+                        `;
+                        cartItemsContainer.appendChild(itemElement);
+                    });
+                }
+                cartSubtotalSpan.textContent = `₱${subtotal.toFixed(2)}`;
+
+                let grandTotal = subtotal;
+                if (isSeniorCitizen) {
+                    const discountAmount = subtotal * SENIOR_DISCOUNT_RATE;
+                    grandTotal -= discountAmount;
+                    seniorDiscountAmountSpan.textContent = `-₱${discountAmount.toFixed(2)}`;
+                    seniorDiscountRow.style.display = 'flex';
+                } else {
+                    seniorDiscountRow.style.display = 'none';
+                }
+                cartGrandTotalSpan.textContent = `₱${grandTotal.toFixed(2)}`;
+
+                document.querySelectorAll('.remove-from-cart-button').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const indexToRemove = parseInt(event.target.dataset.index);
+                        cart.splice(indexToRemove, 1);
+                        updateCartDisplay();
+                    });
+                });
+            }
+
+            addToCartButton.addEventListener('click', () => {
+                const quantity = parseInt(itemQuantityInput.value);
+                if (quantity < 1 || isNaN(quantity)) {
+                    alert('Please enter a valid quantity (at least 1).');
+                    return;
+                }
+
+                let itemToAdd = {
+                    name: currentItem.name,
+                    quantity: quantity
+                };
+
+                if (currentItem.priceTall) {
+                    const selectedSizeElement = document.getElementById('item-size');
+                    const selectedOption = selectedSizeElement.options[selectedSizeElement.selectedIndex];
+                    itemToAdd.size = selectedOption.value;
+                    itemToAdd.price = parseFloat(selectedOption.dataset.price);
+                } else {
+                    itemToAdd.price = parseFloat(currentItem.price);
+                }
+
+                const existingItemIndex = cart.findIndex(cartItem =>
+                    cartItem.name === itemToAdd.name &&
+                    (cartItem.size === itemToAdd.size || (!cartItem.size && !itemToAdd.size))
+                );
+
+                if (existingItemIndex > -1) {
+                    cart[existingItemIndex].quantity += quantity;
+                } else {
+                    cart.push(itemToAdd);
+                }
+
+                updateCartDisplay();
+                closeModal();
+            });
+
+            checkoutButton.addEventListener('click', () => {
+                if (cart.length === 0) {
+                    alert("Your cart is empty. Please add items before proceeding to checkout.");
+                    return;
+                }
+                mainContent.style.display = 'none';
+                checkoutFormContainer.style.display = 'flex';
+                seniorCitizenCheckbox.checked = isSeniorCitizen;
+                const selectedPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                if (selectedPaymentMethod === "GCash" || selectedPaymentMethod === "Paymaya") {
+                    phoneNumberInputGroup.style.display = 'block';
+                    paymentPhoneNumberInput.setAttribute('required', 'true');
+                } else {
+                    phoneNumberInputGroup.style.display = 'none';
+                    paymentPhoneNumberInput.removeAttribute('required');
+                }
+            });
+
+            backToCartButton.addEventListener('click', () => {
+                checkoutFormContainer.style.display = 'none';
+                mainContent.style.display = 'block';
+            });
+
+            seniorCitizenCheckbox.addEventListener('change', (event) => {
+                isSeniorCitizen = event.target.checked;
+                updateCartDisplay();
+            });
+
+            paymentMethodRadios.forEach(radio => {
+                radio.addEventListener('change', (event) => {
+                    if (event.target.value === "GCash" || event.target.value === "Paymaya") {
+                        phoneNumberInputGroup.style.display = 'block';
+                        paymentPhoneNumberInput.setAttribute('required', 'true');
+                    } else {
+                        phoneNumberInputGroup.style.display = 'none';
+                        paymentPhoneNumberInput.removeAttribute('required');
+                    }
+                });
+            });
+
+            customerCheckoutForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const customerName = customerNameInput.value.trim();
+                if (!customerName) {
+                    alert('Please enter customer name.');
+                    return;
+                }
+
+                const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                let paymentPhoneNumber = '';
+
+                if (paymentMethod === "GCash" || paymentMethod === "Paymaya") {
+                    paymentPhoneNumber = paymentPhoneNumberInput.value.trim();
+                    if (!paymentPhoneNumber) {
+                        alert(`Please enter the ${paymentMethod} number.`);
+                        return;
+                    }
+                    if (!/^\d{11}$/.test(paymentPhoneNumber)) {
+                        alert('Please enter a valid 11-digit phone number (e.g., 09171234567).');
+                        return;
+                    }
+                }
+
+                const currentDate = new Date().toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                const transactionId = generateTransactionId();
+
+                let finalSubtotal = 0;
+                cart.forEach(item => {
+                    finalSubtotal += parseFloat(item.price) * item.quantity;
+                });
+
+                let finalDiscountAmount = 0;
+                if (isSeniorCitizen) {
+                    finalDiscountAmount = finalSubtotal * SENIOR_DISCOUNT_RATE;
+                }
+                let finalGrandTotal = finalSubtotal - finalDiscountAmount;
+
+                receiptTransactionId.textContent = transactionId;
+                receiptDate.textContent = currentDate;
+                receiptCustomerName.textContent = customerName;
+                receiptPaymentMethod.textContent = paymentMethod;
+
+                if (paymentPhoneNumber) {
+                    receiptPhoneNumberRow.style.display = 'table-row';
+                    receiptPaymentPhone.textContent = paymentPhoneNumber;
+                } else {
+                    receiptPhoneNumberRow.style.display = 'none';
+                    receiptPaymentPhone.textContent = '';
+                }
+
+
+                receiptItems.innerHTML = '';
+                cart.forEach(item => {
+                    const row = document.createElement('tr');
+                    const itemSubtotal = parseFloat(item.price) * item.quantity;
+                    row.innerHTML = `
+                        <td>${item.name} ${item.size ? `(${item.size})` : ''}</td>
+                        <td>${item.quantity}</td>
+                        <td>₱${parseFloat(item.price).toFixed(2)}</td>
+                        <td>₱${itemSubtotal.toFixed(2)}</td>
+                    `;
+                    receiptItems.appendChild(row);
+                });
+
+                receiptSubtotal.textContent = `₱${finalSubtotal.toFixed(2)}`;
+                if (isSeniorCitizen) {
+                    receiptDiscountRow.style.display = 'table-row';
+                    receiptSeniorDiscount.textContent = `-₱${finalDiscountAmount.toFixed(2)}`;
+                } else {
+                    receiptDiscountRow.style.display = 'none';
+                }
+                receiptGrandTotal.textContent = `₱${finalGrandTotal.toFixed(2)}`;
+
+                checkoutFormContainer.style.display = 'none';
+                receiptContainer.style.display = 'flex';
+            });
+
+            printReceiptButton.addEventListener('click', () => {
+                window.print();
+            });
+
+            newOrderButton.addEventListener('click', () => {
+                cart = [];
+                isSeniorCitizen = false;
+                customerNameInput.value = '';
+                seniorCitizenCheckbox.checked = false;
+                document.querySelector('input[name="payment-method"][value="GCash"]').checked = true;
+                phoneNumberInputGroup.style.display = 'block';
+                paymentPhoneNumberInput.value = '';
+                paymentPhoneNumberInput.setAttribute('required', 'true');
+
+                updateCartDisplay();
+                receiptContainer.style.display = 'none';
+                mainContent.style.display = 'block';
+
+                window.scrollTo(0, 0);
+            });
+
+            updateCartDisplay();
+            const initialPaymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+            if (initialPaymentMethod === "GCash" || initialPaymentMethod === "Paymaya") {
+                phoneNumberInputGroup.style.display = 'block';
+                paymentPhoneNumberInput.setAttribute('required', 'true');
+            } else {
+                phoneNumberInputGroup.style.display = 'none';
+                paymentPhoneNumberInput.removeAttribute('required');
+            }
+        });
+    </script>
+</body>
+</html>
